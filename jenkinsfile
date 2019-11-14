@@ -1,0 +1,23 @@
+pipeline {
+    agent any 
+    stages {
+        stage('checkout') { 
+            steps { 
+                echo 'checkout' 
+                checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], gitTool: 'Default', submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'q', url: 'https://github.com/rzl19961105/ttms']]])
+            }
+        }
+        stage('build'){
+            steps {
+                 echo 'build' 
+                sh 'mvn clean install'
+            }
+        }
+        stage('save') {
+            steps {
+                 echo 'save' 
+                 archiveArtifacts 'target/*.war'
+            }
+        }
+    }
+}
